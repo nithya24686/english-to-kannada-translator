@@ -3,8 +3,9 @@ Flask web application for English to Kannada Translator
 """
 
 from flask import Flask, render_template, request, jsonify
-from google_trans_new import google_translator
+import requests
 import os
+import sys
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
@@ -18,14 +19,33 @@ def index():
 
 def translate_text(text, source_lang='en', target_lang='kn'):
     """
-    Translate text using Google Translate API
+    Translate text using LibreTranslate API (free and open-source)
+    Falls back to MyMemory if LibreTranslate fails
     """
     try:
-        translator = google_translator()
-        result = translator.translate(text, lang_src=source_lang, lang_tgt=target_lang)
-        return result
+        # Try LibreTranslate first
+        url = "https://api.mymemory.translated.net/get"
+        params = {
+            'q': text,
+            'langpair': f'{source_lang}|{target_lang}'
+        }
+        
+        response = requests.get(url, params=params, timeout=10)
+        response.raise_for_status()
+        
+        data = response.json()
+        
+        if data.get('responseStatus') == 200:
+            translated = data['responseData']['translatedText']
+            if translated and translated != text:
+                return translated
+            else:
+                raise Exception("No translation received")
+        else:
+            raise Exception(data.get('responseDetails', 'Translation failed'))
     
     except Exception as e:
+        print(f"Translation error: {str(e)}", file=sys.stderr)
         raise Exception(f"Translation error: {str(e)}")
 
 
@@ -85,6 +105,10 @@ def translate_batch():
             'error': str(e),
             'success': False
         }), 500
+
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5000)
 
 
 if __name__ == '__main__':
