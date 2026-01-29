@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English to Kannada Translator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="translator-box">
+            <h1>🌍 English to Kannada Translator</h1>
+            
+            <div class="translator-content">
+                <!-- Input Section -->
+                <div class="input-section">
+                    <div class="language-header">
+                        <h2>English</h2>
+                        <span class="char-count" id="charCount">0/500</span>
+                    </div>
+                    <textarea 
+                        id="englishText" 
+                        placeholder="Enter English text here..." 
+                        maxlength="500"
+                        rows="8"></textarea>
+                    <button class="btn btn-clear" onclick="clearEnglish()">Clear</button>
+                </div>
+
+                <!-- Translate Button -->
+                <div class="button-container">
+                    <button class="btn btn-translate" onclick="translate()" id="translateBtn">
+                        Translate →
+                    </button>
+                </div>
+
+                <!-- Output Section -->
+                <div class="output-section">
+                    <div class="language-header">
+                        <h2>ಕನ್ನಡ (Kannada)</h2>
+                    </div>
+                    <div id="kannadaText" class="output-text" placeholder="Translation will appear here..."></div>
+                    <button class="btn btn-copy" onclick="copyToClipboard()" id="copyBtn" style="display: none;">
+                        📋 Copy
+                    </button>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+            <!-- Loading Indicator -->
+            <div id="loadingIndicator" class="loading-indicator" style="display: none;">
+                <div class="spinner"></div>
+                <p>Translating...</p>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="features">
+            <h3>Features</h3>
+            <ul>
+                <li>✓ Fast and accurate translation</li>
+                <li>✓ Character count (Max 500)</li>
+                <li>✓ Copy to clipboard</li>
+                <li>✓ Clean and user-friendly interface</li>
+            </ul>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Made with ❤️ | English to Kannada Translator v1.0</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
